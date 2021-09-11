@@ -5,7 +5,6 @@ import time
 from keras.preprocessing import image
 from keras.models import load_model
 import os
-from PIL import Image, ImageOps
 model = load_model('model.h5')
 
 st.title('CatDog Classifier')
