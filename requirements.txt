@@ -1,5 +1,4 @@
 streamlit>=0.61.0
-keras
-numpy
-time
+Keras==2.1.6
+numpy>=1.8.0
 os
