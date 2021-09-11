@@ -1,53 +1,45 @@
 import streamlit as st
-# To make things easier later, we're also importing numpy and pandas for
-# working with sample data.
+import os
 import numpy as np
-import pandas as pd
-import requests
 import time
-st.title('Weather Api using Streamlit ,python')
+from keras.preprocessing import image
+from keras.models import load_model
+import os
+from PIL import Image, ImageOps
+model = load_model('model.h5')
 
- 
+st.title('CatDog Classifier')
 
-def getWeather(path):
-    city = path
-    api = "https://api.openweathermap.org/data/2.5/weather?q="+city+"&appid=56622db96b5640dd7d721d1d57524d71"
+def file_selector(folder_path='.'):
+    filenames = os.listdir(folder_path)
+    selected_filename = st.selectbox('Select Image file', filenames)
+    return os.path.join(folder_path, selected_filename)
+
+filename = file_selector()
+st.write('You selected `%s`' % filename)
+st.write('Classifying this image...')
+
+if filename is not None and (filename[-4:]=='.jpg' or filename[-4:]=='.png' or filename[-4:]=='.jpeg' or filename[-4:]=='.JPG' or filename[-4:]=='.PNG' or filename[-4:]=='.JPEG'):
+
+    #st.write('Image file selected: ', filename)
+    test_image = image.load_img(filename, target_size = (64, 64))
+    #print(test_image)
+    test_image = image.img_to_array(test_image)
+    test_image = np.expand_dims(test_image, axis = 0)
+    result = model.predict(test_image)
+    #training_set.class_indices
     
-    json_data = requests.get(api).json()
-    condition = json_data['weather'][0]['main']
-    
-    temp = int(json_data['main']['temp'] - 273.15)
-
-    min_temp = int(json_data['main']['temp_min'] - 273.15)
-    
-    max_temp = int(json_data['main']['temp_max'] - 273.15)
-   
-    pressure = json_data['main']['pressure']
-
-    humidity = json_data['main']['humidity']
-
-    wind = json_data['wind']['speed']
- 
-    sunrise = time.strftime('%I:%M:%S', time.gmtime(json_data['sys']['sunrise'] - 21600))
-
-    sunset = time.strftime('%I:%M:%S', time.gmtime(json_data['sys']['sunset'] - 21600))
- 
-
-    final_info = condition + "\n" + str(temp) + "°C"
-    st.write(final_info) 
-    final_data = "\n"+ "Min Temp: " + str(min_temp) + "°C" + "\n" + "Max Temp: " + str(max_temp) + "°C" +"\n" + "Pressure: " + str(pressure) + "\n" +"Humidity: " + str(humidity) + "\n" +"Wind Speed: " + str(wind) + "\n" + "Sunrise: " + sunrise + "\n" + "Sunset: " + sunset
-    st.write(final_data)
-    df = pd.DataFrame(columns=['condition', 'temp', 'min_temp', 'max_temp','pressure','humidity','wind','sunrise','sunset'])
-    
-    
-    # label1.config(text = final_info)
-    #label2.config(text = final_data)
-
-
-path = st.text_input('Enter City  Name')
-if st.button('Get Weather'):
-#getWeather(path)
-    if path=="":
-        st.error("Please enter a valid city name")
+    if result[0][0] == 1:
+        prediction = 'dog'
     else:
-        st.write(getWeather(path))
+        prediction = 'cat'
+    time.sleep(5)  
+    #print(prediction)
+    st.write(prediction)
+else:
+    st.write('Please select an image file')
+    st.write('Exiting...')
+
+
+
+
