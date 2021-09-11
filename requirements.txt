@@ -1,2 +1,6 @@
 streamlit>=0.61.0
-
+keras
+numpy
+PIL
+time
+os
