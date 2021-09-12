@@ -2,5 +2,5 @@ streamlit>=0.61.0
 Keras
 numpy==1.18.1
 Pillow >= 1.0
-tensorflow==1.4.0
-tensorflow-tensorboard==0.4.0rc3
+tensorflow>=1.4.0
+
