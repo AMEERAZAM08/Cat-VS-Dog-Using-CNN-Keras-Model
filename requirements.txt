@@ -3,4 +3,3 @@ Keras
 numpy==1.18.1
 Pillow >= 1.0
 tensorflow>=1.4.0
-
